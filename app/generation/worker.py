@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import argparse
+import os
 from pathlib import Path
+import sys
 
 from app.generation import GenerationError, Generator
 
@@ -14,6 +16,15 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("group")
     parser.add_argument("app_root", type=Path)
     return parser
+
+
+def wait_for_completion() -> None:
+    """Keep the worker console open in both script and frozen EXE modes."""
+    if sys.platform == "win32":
+        os.system("pause")
+        return
+
+    input("Нажмите Enter для завершения...")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -42,7 +53,7 @@ def main(argv: list[str] | None = None) -> int:
         f"создано={stats.generated}; ошибок={stats.errors}",
         flush=True,
     )
-    input("Нажмите Enter для завершения...")
+    wait_for_completion()
     return 0
 
 
