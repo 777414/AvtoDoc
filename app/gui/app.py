@@ -123,9 +123,8 @@ class AvtoDocApp(ctk.CTk):
     ) -> subprocess.Popen:
         command = [
             sys.executable,
-            "-m",
-            "app.generation.worker",
-            registry,
+            "--worker",
+            str(registry),
             group,
             str(app_root),
         ]
