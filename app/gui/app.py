@@ -116,7 +116,7 @@ class AvtoDocApp(ctk.CTk):
         app_root = get_app_root()
 
         self._generation_active = True
-        self._set_enabled(False)
+        self.withdraw()
         self._open_generation_window(registry, group)
 
         threading.Thread(
@@ -283,8 +283,6 @@ class AvtoDocApp(ctk.CTk):
             "WM_DELETE_WINDOW",
             self._close_generation_window,
         )
-        self._set_enabled(True)
-
     def _close_generation_window(self) -> None:
         if self._generation_active:
             return
@@ -296,12 +294,10 @@ class AvtoDocApp(ctk.CTk):
             self._status_label = None
             self._stats_label = None
 
+        self.deiconify()
+
     def _on_main_close(self) -> None:
         if self._generation_active:
-            messagebox.showwarning(
-                "AvtoDoc",
-                "Дождитесь завершения генерации.",
-            )
             return
         self.destroy()
 
