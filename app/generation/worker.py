@@ -1,9 +1,10 @@
-"""Console worker for running one AvtoDoc generation job."""
+"""Generation worker helpers."""
 
 from __future__ import annotations
 
 import argparse
 from pathlib import Path
+import sys
 
 from app.generation import GenerationError, Generator
 
@@ -16,6 +17,21 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def run_generation(
+    registry: Path,
+    group: str,
+    app_root: Path,
+    progress,
+):
+    """Run one generation job and forward progress messages."""
+    return Generator().generate(
+        registry,
+        group,
+        app_root,
+        progress=progress,
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
 
@@ -23,7 +39,7 @@ def main(argv: list[str] | None = None) -> int:
         print(message, flush=True)
 
     try:
-        stats = Generator().generate(
+        stats = run_generation(
             args.registry,
             args.group,
             args.app_root,
@@ -42,7 +58,6 @@ def main(argv: list[str] | None = None) -> int:
         f"создано={stats.generated}; ошибок={stats.errors}",
         flush=True,
     )
-    input("Нажмите Enter для завершения...")
     return 0
 
 
