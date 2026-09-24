@@ -7,7 +7,7 @@ import shutil
 from app.documents import DocumentHandler, DocxHandler, DocumentProcessingError
 from app.excel import ExcelReadError, read_registry
 from app.logging import GenerationLogger
-from app.paths import ensure_runtime_directories
+from app.paths import get_logs_dir, ensure_runtime_directories
 
 
 @dataclass
@@ -64,7 +64,7 @@ class Generator:
                 logger.write("=== Генерация завершена ===")
                 return stats
 
-            supported_templates: list[tuple[Path, DocumentHandler]] = []
+            templates_dir, _logs_dir, results_dir = ensure_runtime_directories(app_root)\n            supported_templates: list[tuple[Path, DocumentHandler]] = []
             for template_path in sorted(templates_dir.iterdir()):
                 if not template_path.is_file():
                     continue
