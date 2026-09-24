@@ -1,0 +1,4 @@
+customtkinter
+openpyxl
+xlrd
+python-docx
