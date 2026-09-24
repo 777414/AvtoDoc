@@ -106,8 +106,7 @@ class AvtoDocApp(ctk.CTk):
             self._process = self._start_worker(registry, group, app_root)
         except OSError as exc:
             self._set_enabled(True)
-            messagebox.showerror("AvtoDoc", f"Не удалось запустить генерацию:
-{exc}")
+            messagebox.showerror("AvtoDoc", f"Не удалось запустить генерацию:\n{exc}")
             return
 
         threading.Thread(
