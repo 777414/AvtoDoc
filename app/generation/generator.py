@@ -41,7 +41,8 @@ class Generator:
         if not group:
             raise GenerationError("Группа не указана.")
 
-        templates_dir, logs_dir, results_dir = ensure_runtime_directories(app_root)
+        logs_dir = get_logs_dir(app_root)
+        logs_dir.mkdir(parents=True, exist_ok=True)
 
         with GenerationLogger(logs_dir) as logger:
             logger.write("=== AvtoDoc: начало генерации ===")
@@ -64,7 +65,8 @@ class Generator:
                 logger.write("=== Генерация завершена ===")
                 return stats
 
-            templates_dir, _logs_dir, results_dir = ensure_runtime_directories(app_root)\n            supported_templates: list[tuple[Path, DocumentHandler]] = []
+            templates_dir, _logs_dir, results_dir = ensure_runtime_directories(app_root)
+            supported_templates: list[tuple[Path, DocumentHandler]] = []
             for template_path in sorted(templates_dir.iterdir()):
                 if not template_path.is_file():
                     continue
