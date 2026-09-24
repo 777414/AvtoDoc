@@ -1,8 +1,10 @@
 """AvtoDoc application entry point."""
 
+from app.gui import run
+
 
 def main() -> None:
-    raise NotImplementedError("Application shell will be implemented in a later iteration.")
+    run()
 
 
 if __name__ == "__main__":
