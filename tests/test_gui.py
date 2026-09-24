@@ -39,3 +39,31 @@ def test_validate_generation_inputs_rejects_unsupported_extension(tmp_path: Path
     assert validate_generation_inputs(str(registry), "101") == (
         "Поддерживаются только файлы .xlsx и .xls."
     )
+
+
+def test_generation_hides_main_window(monkeypatch, tmp_path: Path):
+    app = object.__new__(type("FakeApp", (), {}))
+    app._registry_var = type("Var", (), {"get": lambda self: str(tmp_path / "students.xlsx")})()
+    app._group_var = type("Var", (), {"get": lambda self: "101"})()
+    app._generation_active = False
+    app._set_enabled = lambda enabled: None
+    app._open_generation_window = lambda registry, group: None
+    app.withdraw = lambda: setattr(app, "_hidden", True)
+    app._hidden = False
+    app._generation_window = None
+    app.after = lambda *args: None
+
+    registry = tmp_path / "students.xlsx"
+    registry.write_text("placeholder", encoding="utf-8")
+
+    monkeypatch.setattr("app.gui.app.get_app_root", lambda: tmp_path)
+    monkeypatch.setattr("app.gui.app.threading.Thread", lambda *args, **kwargs: type(
+        "Thread",
+        (),
+        {"start": lambda self: None},
+    )())
+
+    app._start_generation()
+
+    assert app._hidden is True
+    assert app._generation_active is True
