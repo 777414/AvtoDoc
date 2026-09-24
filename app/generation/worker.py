@@ -18,6 +18,19 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def configure_windows_console_io() -> None:
+    """Reconnect Python standard streams to the newly created Windows console."""
+    if sys.platform != "win32":
+        return
+
+    if not getattr(sys, "frozen", False):
+        return
+
+    sys.stdin = open("CONIN$", "r", encoding="utf-8", errors="replace")
+    sys.stdout = open("CONOUT$", "w", encoding="utf-8", errors="replace")
+    sys.stderr = open("CONOUT$", "w", encoding="utf-8", errors="replace")
+
+
 def wait_for_completion() -> None:
     """Keep the worker console open in both script and frozen EXE modes."""
     if sys.platform == "win32":
@@ -28,6 +41,7 @@ def wait_for_completion() -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
+    configure_windows_console_io()
     args = build_parser().parse_args(argv)
 
     def report(message: str) -> None:
